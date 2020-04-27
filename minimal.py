@@ -14,8 +14,12 @@ settings.configure(
 def index(request):
     return HttpResponse('<h1>A minimal Django response!</h1>')
 
+def home(request):
+    return HttpResponse('Welcome to the Tinyapp\'s Homepage!')
+
 urlpatterns = [
     url(r'^$', index),
+    url(r'home^$', home),
 ]
 
 if __name__ == '__main__':
