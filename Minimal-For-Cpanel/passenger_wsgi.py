@@ -1,0 +1,1 @@
+from minimal.wsgi import application
