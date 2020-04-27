@@ -8,6 +8,7 @@ from django.http import HttpResponse
 settings.configure(
     DEBUG=True,
     ROOT_URLCONF=sys.modules[__name__],
+    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates'},],
 )
 
 
@@ -23,10 +24,38 @@ def gettry(request):
         '<h1 style="color:' + color + '">Welcome to the Tinyapp\'s Homepage!</h1>'
     )  # don't use user input like that in real projects!
 
+from django.template import engines
+from django.template.loader import render_to_string
+
+def templatetry(request):
+    title = 'Tinyapp'
+    author = 'Vitor Freitas'
+
+    about_template = '''<!DOCTYPE html>
+    <html>
+    <head>
+      <title>{{ title }}</title>
+    </head>
+    <body>
+      <h1>About {{ title }}</h1>
+      <p>This Website was developed by {{ author }}.</p>
+      <p>Now using the Django's Template Engine.</p>
+      <p><a href="{% url 'homepage' %}">Return to the homepage</a>.</p>
+    </body>
+    </html>
+    '''
+
+    django_engine = engines['django']
+    template = django_engine.from_string(about_template)
+    html = template.render({'title': title, 'author': author})
+
+    return HttpResponse(html)
+
 urlpatterns = [
     url(r'^$', index),
-    url(r'^home$', home),
+    url(r'^home$', home,name="homepage"),
     url(r'^tryget$', gettry),
+    url(r'^trytemplate$',templatetry)
 ]
 
 if __name__ == '__main__':
